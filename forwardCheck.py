@@ -51,31 +51,26 @@ class Board():
     prev_state = None
     while True:
       constraints_broken = [(self.n_constraints_broken(row, col), row) for row, col in enumerate(self.queens)]
-      maximum = max(constraints_broken, key=lambda c: c[0])[0]
-      if maximum == 0:
+      val, row = max(constraints_broken, key=lambda c: c[0])
+
+      if val == 0:
         break
+
+      self.queens[row] = min([n for n in range(N_QUEENS)], key=lambda n: self.n_constraints_broken(row, n))
+      curr_state = [self.n_constraints_broken(row, col) for row, col in enumerate(self.queens)]
+
+      if prev_state == curr_state:
+        if DEBUG or SHOW_STEPS: print("Local minimum detected - Random Reset")
+        self.reset()
       
-      if DEBUG: print('maximum:', maximum)
-      max_rows = [queen[1] for queen in constraints_broken if queen[0] == maximum]
-      if DEBUG: print('max rows:', max_rows)
+      prev_state = curr_state
 
-      for row in max_rows:
-        self.queens[row] = min([n for n in range(N_QUEENS)], key=lambda n: self.n_constraints_broken(row, n))
-        curr_state = [self.n_constraints_broken(row, col) for row, col in enumerate(self.queens)]
-
-        if prev_state == curr_state:
-          if DEBUG or SHOW_STEPS: print("Local minimum detected - Random Reset")
-          self.reset()
-        
-        prev_state = curr_state
-
-        if SHOW_STEPS: self.print_board()
+      if SHOW_STEPS: self.print_board()
+    
     if DEBUG: print([self.n_constraints_broken(row, col) for row, col in enumerate(self.queens)])
 
-  
   def reset(self):
     self.queens = [ random.randint(0, N_QUEENS - 1) for x in range(N_QUEENS) ]
-
 
 parser = ArgumentParser()
 parser.add_argument('-d', '--debug', action="store_true")
@@ -86,7 +81,6 @@ args = parser.parse_args()
 DEBUG = args.debug
 SHOW_STEPS = args.steps
 N_QUEENS = int(args.nqueens)
-
 
 board = Board()
 print(board.queens)

@@ -7,4 +7,4 @@ Currently implemented:
 | problem | method |
 | -- | -- |
 | *send more money* | backtracking search |
-| many queens | forward check with random reset |
+| many queens | hill climb with random reset |

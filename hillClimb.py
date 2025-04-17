@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Forward checking search for many queens problem
+# Hill climbing by min conflicts to solve many queens problem
 # Used primitive random reset for local minimum detection
 
 import random
